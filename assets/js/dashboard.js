@@ -126,7 +126,7 @@ export class Dashboard {
 		const repoData = this.repos.flatMap((x) => {
 			return { stats: x.cData.stats, reopName: x.name };
 		});
-		console.log(repoData);
+		
 		const contributorAllRepo = repoData.map((x) => {
 			return {
 				stats: x.stats.filter((y) => y.author.login == contributorName),
@@ -227,9 +227,9 @@ export class Dashboard {
 				contributorData: await this.getContributorDataForRepo(repo.name),
 				stats: await this.getContributorStatsForRepo(repo.name)
 			};
-
+		
 			repo.cData = cData;
-
+			
 			const contributorData = cData.contributorData;
 			for (const d of contributorData) {
 				c.contributorLogins.push({
@@ -370,18 +370,30 @@ export class Dashboard {
 	RepoPane (params, active = false) {
 		const list = params.contributorLogins.map(
 			(x) =>
-				`<li><img style='height:20px' src='${x.avatarUrl}'/>${x.name} | ${x.contributions} contributions</li>`
+				`<li class='contributor shadow rounded-pill bg-white p-2 d-block m-2 d-flex align-items-center'>
+					<img class='contributor__img me-2' src='${x.avatarUrl}'/>
+					<div class='pe-2'>
+						<h2 class='fs-6 m-0'>
+							${x.name}
+						</h4>
+						<p class='contributor__contributions m-0'>
+							${x.contributions} contributions
+						</p>
+					</div>
+				</li>`
 		);
 		return `<div class="tab-pane fade ${active ? 'show active' : ''}" id="${params.title
 			}-pane" role="tabpanel" aria-labelledby="home-tab">
 										<card class='card col m-2'>
-											<card-header class='card-header'>${params.title}</card-header>
-											<div class='card-body'>
-												<ul>
+											<card-header class='card-header bg-transparent'>
+												<h1 class='fs-4'>${params.title}</h3>
+												<span class='fw-bold'>Pull Requests:</span> ${params.pullRequests.length}
+											</card-header>
+											<div class='card-body mx-3 px-4 rounded'>
+												<ul class='contributors list-unstyled d-flex flex-wrap'>
 													${list.join('')}
 												</ul>
 											</div>
-											Pull Requests: ${params.pullRequests.length}
 										<card></div>`;
 	}
 
